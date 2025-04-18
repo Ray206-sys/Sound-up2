@@ -49,6 +49,14 @@
       }
 
       init();
+        navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function(stream) {
+          console.log("マイクアクセス許可されました！");
+          init();  // マイクアクセスが許可されたら音声認識を開始
+        })
+        .catch(function(error) {
+          console.log("マイクアクセスが許可されていません:", error);
+        });
     </script>
   </body>
 </html>
