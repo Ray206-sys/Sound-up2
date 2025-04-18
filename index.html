@@ -40,6 +40,8 @@
             <p><strong>予測:</strong> ${labels[maxIndex]}</p>
             <p><strong>信頼度:</strong> ${(scores[maxIndex] * 100).toFixed(2)}%</p>
           `;
+ 
+          window.ReactNativeWebView?.postMessage(labels[maxIndex]);
         }, {
           overlapFactor: 0.5,
           probabilityThreshold: 0.5
@@ -50,4 +52,4 @@
     </script>
   </body>
 </html>
-     
+
