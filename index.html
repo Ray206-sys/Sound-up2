@@ -7,6 +7,8 @@
   </head>
   <body>
     <h1>Listening...</h1>
+    <div id="label-container"></div>
+
     <script type="text/javascript">
       const URL = "https://teachablemachine.withgoogle.com/models/-il0knCW0/";
       let model, recognizer;
@@ -17,12 +19,30 @@
 
         recognizer = await tmAudio.load(checkpointURL, metadataURL);
         await recognizer.ensureModelLoaded();
+
+        const labelContainer = document.getElementById("label-container");
+
         recognizer.listen(result => {
-          const prediction = result.scores.indexOf(Math.max(...result.scores));
-          console.log("Prediction: ", prediction);
+          const scores = result.scores;
+          const labels = recognizer.wordLabels();
+
+          let maxScore = -1;
+          let maxIndex = -1;
+
+          for (let i = 0; i < scores.length; i++) {
+            if (scores[i] > maxScore) {
+              maxScore = scores[i];
+              maxIndex = i;
+            }
+          }
+
+          labelContainer.innerHTML = `
+            <p><strong>予測:</strong> ${labels[maxIndex]}</p>
+            <p><strong>信頼度:</strong> ${(scores[maxIndex] * 100).toFixed(2)}%</p>
+          `;
         }, {
           overlapFactor: 0.5,
-          probabilityThreshold: 0.75
+          probabilityThreshold: 0.5
         });
       }
 
@@ -30,5 +50,4 @@
     </script>
   </body>
 </html>
-
-
+     
