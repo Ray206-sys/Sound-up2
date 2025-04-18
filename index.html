@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Teachable Machine Audio</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/audio"></script>
+  </head>
+  <body>
+    <h1>Listening...</h1>
+    <script type="text/javascript">
+      const URL = "https://teachablemachine.withgoogle.com/models/-il0knCW0/";
+      let model, recognizer;
+
+      async function init() {
+        const checkpointURL = URL + "model.json";
+        const metadataURL = URL + "metadata.json";
+
+        recognizer = await tmAudio.load(checkpointURL, metadataURL);
+        await recognizer.ensureModelLoaded();
+        recognizer.listen(result => {
+          const prediction = result.scores.indexOf(Math.max(...result.scores));
+          console.log("Prediction: ", prediction);
+        }, {
+          overlapFactor: 0.5,
+          probabilityThreshold: 0.75
+        });
+      }
+
+      init();
+    </script>
+  </body>
+</html>
+
+
